@@ -1,0 +1,51 @@
+<idea-plugin>
+    <id>com.dailyreport.plugin</id>
+    <name>Daily Report Plugin</name>
+    <version>1.0.0</version>
+    <vendor email="support@dailyreport.com" url="https://www.dailyreport.com">DailyReport Team</vendor>
+    
+    <description><![CDATA[
+    IntelliJ IDEA plugin for generating daily/weekly work reports with Git log analysis and AI summary powered by Baidu Qianfan Coding Plan.
+    
+    Features:
+    - Multi-project Git log parsing
+    - Flexible time range selection (daily/weekly)
+    - AI-powered summary generation using Baidu Qianfan Coding Plan
+    - Customizable output path and project configuration
+    - Support for both OpenAI and Anthropic protocol compatibility
+    ]]></description>
+    
+    <depends>com.intellij.modules.platform</depends>
+    
+    <!-- 配置界面 -->
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable
+            parentId="tools"
+            instance="com.dailyreport.ui.PluginConfigurable"
+            id="com.dailyreport.ui.PluginConfigurable"
+            displayName="日报周报插件"/>
+        
+        <applicationService
+            serviceImplementation="com.dailyreport.component.PluginConfigComponent"/>
+    </extensions>
+    
+    <!-- Action 定义 -->
+    <actions>
+        <!-- 顶部菜单 Action -->
+        <action id="com.dailyreport.action.GenerateReportAction"
+                class="com.dailyreport.action.GenerateReportAction"
+                text="生成工作报告"
+                description="生成多项目工作日报/周报">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+        
+        <!-- 右键菜单 Action -->
+        <action id="com.dailyreport.action.GenerateReportPopupAction"
+                class="com.dailyreport.action.GenerateReportAction"
+                text="生成工作报告"
+                description="生成多项目工作日报/周报">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+    
+</idea-plugin>
