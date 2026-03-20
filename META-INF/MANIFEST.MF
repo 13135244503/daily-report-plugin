@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Implementation-Vendor: DailyReport Team
 Implementation-Title: Daily Report Plugin
-Implementation-Version: 1.0.0
+Implementation-Version: 1.0.1
