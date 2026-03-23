@@ -46,6 +46,14 @@
                 description="生成多项目工作日报/周报">
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
+        
+        <!-- 翻译 Action -->
+        <action id="com.dailyreport.action.TranslateAction"
+                class="com.dailyreport.action.TranslateAction"
+                text="中文转编程命名"
+                description="将中文翻译为编程命名格式">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
     </actions>
     
 </idea-plugin>

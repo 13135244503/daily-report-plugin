@@ -18,10 +18,13 @@ public class PluginGlobalConfig {
     
     private AIConfig aiConfig;
     
+    private TranslationConfig translationConfig;
+    
     public PluginGlobalConfig() {
         this.projects = new ArrayList<>();
         this.outputRootPath = System.getProperty("user.home") + "/工作报告/";
         this.aiConfig = new AIConfig();
+        this.translationConfig = new TranslationConfig();
     }
     
     public List<ProjectConfig> getProjects() {
@@ -46,6 +49,14 @@ public class PluginGlobalConfig {
     
     public void setAiConfig(AIConfig aiConfig) {
         this.aiConfig = aiConfig;
+    }
+    
+    public TranslationConfig getTranslationConfig() {
+        return translationConfig;
+    }
+    
+    public void setTranslationConfig(TranslationConfig translationConfig) {
+        this.translationConfig = translationConfig;
     }
     
     /**
@@ -128,6 +139,134 @@ public class PluginGlobalConfig {
          */
         public boolean needsBearerToken() {
             return "HuaweiCloud".equals(protocol);
+        }
+    }
+    
+    /**
+     * 翻译配置
+     */
+    @XStreamAlias("translationConfig")
+    public static class TranslationConfig {
+        
+        private String provider;
+        private String hotkey;
+        private boolean showVariableName;
+        private boolean showConstantName;
+        private boolean showCamelCase;
+        private boolean showMethodName;
+        private boolean showClassName;
+        private boolean showFileName;
+        
+        private String baiduAppId;
+        private String baiduKey;
+        private String youdaoAppKey;
+        private String youdaoAppSecret;
+        
+        public TranslationConfig() {
+            this.provider = "Baidu";
+            this.hotkey = "ctrl shift T";
+            this.showVariableName = true;
+            this.showConstantName = true;
+            this.showCamelCase = true;
+            this.showMethodName = true;
+            this.showClassName = true;
+            this.showFileName = true;
+        }
+        
+        public String getProvider() {
+            return provider;
+        }
+        
+        public void setProvider(String provider) {
+            this.provider = provider;
+        }
+        
+        public String getHotkey() {
+            return hotkey;
+        }
+        
+        public void setHotkey(String hotkey) {
+            this.hotkey = hotkey;
+        }
+        
+        public boolean isShowVariableName() {
+            return showVariableName;
+        }
+        
+        public void setShowVariableName(boolean showVariableName) {
+            this.showVariableName = showVariableName;
+        }
+        
+        public boolean isShowConstantName() {
+            return showConstantName;
+        }
+        
+        public void setShowConstantName(boolean showConstantName) {
+            this.showConstantName = showConstantName;
+        }
+        
+        public boolean isShowCamelCase() {
+            return showCamelCase;
+        }
+        
+        public void setShowCamelCase(boolean showCamelCase) {
+            this.showCamelCase = showCamelCase;
+        }
+        
+        public boolean isShowMethodName() {
+            return showMethodName;
+        }
+        
+        public void setShowMethodName(boolean showMethodName) {
+            this.showMethodName = showMethodName;
+        }
+        
+        public boolean isShowClassName() {
+            return showClassName;
+        }
+        
+        public void setShowClassName(boolean showClassName) {
+            this.showClassName = showClassName;
+        }
+        
+        public boolean isShowFileName() {
+            return showFileName;
+        }
+        
+        public void setShowFileName(boolean showFileName) {
+            this.showFileName = showFileName;
+        }
+        
+        public String getBaiduAppId() {
+            return baiduAppId;
+        }
+        
+        public void setBaiduAppId(String baiduAppId) {
+            this.baiduAppId = baiduAppId;
+        }
+        
+        public String getBaiduKey() {
+            return baiduKey;
+        }
+        
+        public void setBaiduKey(String baiduKey) {
+            this.baiduKey = baiduKey;
+        }
+        
+        public String getYoudaoAppKey() {
+            return youdaoAppKey;
+        }
+        
+        public void setYoudaoAppKey(String youdaoAppKey) {
+            this.youdaoAppKey = youdaoAppKey;
+        }
+        
+        public String getYoudaoAppSecret() {
+            return youdaoAppSecret;
+        }
+        
+        public void setYoudaoAppSecret(String youdaoAppSecret) {
+            this.youdaoAppSecret = youdaoAppSecret;
         }
     }
 }
