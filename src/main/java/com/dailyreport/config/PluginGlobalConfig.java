@@ -149,7 +149,6 @@ public class PluginGlobalConfig {
     public static class TranslationConfig {
         
         private String provider;
-        private String hotkey;
         private boolean showVariableName;
         private boolean showConstantName;
         private boolean showCamelCase;
@@ -164,7 +163,6 @@ public class PluginGlobalConfig {
         
         public TranslationConfig() {
             this.provider = "Baidu";
-            this.hotkey = "ctrl shift T";
             this.showVariableName = true;
             this.showConstantName = true;
             this.showCamelCase = true;
@@ -179,14 +177,6 @@ public class PluginGlobalConfig {
         
         public void setProvider(String provider) {
             this.provider = provider;
-        }
-        
-        public String getHotkey() {
-            return hotkey;
-        }
-        
-        public void setHotkey(String hotkey) {
-            this.hotkey = hotkey;
         }
         
         public boolean isShowVariableName() {

@@ -53,6 +53,7 @@
                 text="中文转编程命名"
                 description="将中文翻译为编程命名格式">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift Q"/>
         </action>
     </actions>
     

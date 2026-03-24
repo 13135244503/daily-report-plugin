@@ -46,7 +46,6 @@ public class PluginConfigurable implements Configurable {
     
     // 翻译配置相关组件
     private JComboBox<String> translationProviderComboBox;
-    private JTextField hotkeyField;
     private JCheckBox showVariableNameCheckBox;
     private JCheckBox showConstantNameCheckBox;
     private JCheckBox showCamelCaseCheckBox;
@@ -386,74 +385,10 @@ public class PluginConfigurable implements Configurable {
         gbc.weightx = 1;
         panel.add(translationProviderComboBox, gbc);
         
-        // 快捷键
-        JLabel hotkeyLabel = new JLabel("快捷键:");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 0;
-        panel.add(hotkeyLabel, gbc);
-        
-        hotkeyField = new JTextField(20);
-        hotkeyField.setText("ctrl shift T");
-        hotkeyField.setEditable(false);
-        hotkeyField.setFocusable(true);
-        hotkeyField.setToolTipText("点击后按下快捷键组合（如 Ctrl+Shift+Y）");
-        
-        hotkeyField.addKeyListener(new java.awt.event.KeyAdapter() {
-            private java.util.List<Integer> pressedKeys = new java.util.ArrayList<>();
-            
-            @Override
-            public void keyPressed(java.awt.event.KeyEvent e) {
-                if (!pressedKeys.contains(e.getKeyCode())) {
-                    pressedKeys.add(e.getKeyCode());
-                }
-            }
-            
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent e) {
-                if (pressedKeys.contains(e.getKeyCode())) {
-                    pressedKeys.remove(Integer.valueOf(e.getKeyCode()));
-                }
-                
-                if (pressedKeys.isEmpty()) {
-                    String hotkeyText = buildHotkeyText(e);
-                    if (!hotkeyText.isEmpty()) {
-                        hotkeyField.setText(hotkeyText);
-                        modified = true;
-                    }
-                }
-            }
-            
-            private String buildHotkeyText(java.awt.event.KeyEvent e) {
-                StringBuilder sb = new StringBuilder();
-                java.util.List<String> modifiers = new java.util.ArrayList<>();
-                
-                if (e.isControlDown()) modifiers.add("ctrl");
-                if (e.isShiftDown()) modifiers.add("shift");
-                if (e.isAltDown()) modifiers.add("alt");
-                if (e.isMetaDown()) modifiers.add("meta");
-                
-                for (String modifier : modifiers) {
-                    sb.append(modifier).append(" ");
-                }
-                
-                String keyText = java.awt.event.KeyEvent.getKeyText(e.getKeyCode());
-                if (!modifiers.isEmpty()) {
-                    sb.append(keyText);
-                }
-                
-                return sb.toString().trim();
-            }
-        });
-        
-        gbc.gridx = 1;
-        gbc.weightx = 1;
-        panel.add(hotkeyField, gbc);
-        
         // 分隔线
         JSeparator separator = new JSeparator();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(separator, gbc);
@@ -461,7 +396,7 @@ public class PluginConfigurable implements Configurable {
         // 显示选项
         JLabel showOptionsLabel = new JLabel("显示选项:");
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         gbc.gridwidth = 2;
         gbc.weightx = 0;
         panel.add(showOptionsLabel, gbc);
@@ -469,64 +404,70 @@ public class PluginConfigurable implements Configurable {
         showVariableNameCheckBox = new JCheckBox("变量名 (snake_case)", true);
         showVariableNameCheckBox.addActionListener(e -> modified = true);
         gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.gridwidth = 2;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.33;
         panel.add(showVariableNameCheckBox, gbc);
         
         showConstantNameCheckBox = new JCheckBox("常量名 (UPPER_SNAKE_CASE)", true);
         showConstantNameCheckBox.addActionListener(e -> modified = true);
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.33;
         panel.add(showConstantNameCheckBox, gbc);
         
         showCamelCaseCheckBox = new JCheckBox("驼峰命名 (camelCase)", true);
         showCamelCaseCheckBox.addActionListener(e -> modified = true);
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 2;
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.33;
         panel.add(showCamelCaseCheckBox, gbc);
         
         showMethodNameCheckBox = new JCheckBox("方法名 (methodName)", true);
         showMethodNameCheckBox.addActionListener(e -> modified = true);
         gbc.gridx = 0;
-        gbc.gridy = 7;
-        gbc.gridwidth = 2;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.33;
         panel.add(showMethodNameCheckBox, gbc);
         
         showClassNameCheckBox = new JCheckBox("类名 (ClassName)", true);
         showClassNameCheckBox.addActionListener(e -> modified = true);
-        gbc.gridx = 0;
-        gbc.gridy = 8;
-        gbc.gridwidth = 2;
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.33;
         panel.add(showClassNameCheckBox, gbc);
         
         showFileNameCheckBox = new JCheckBox("文件名 (file_name)", true);
         showFileNameCheckBox.addActionListener(e -> modified = true);
-        gbc.gridx = 0;
-        gbc.gridy = 9;
-        gbc.gridwidth = 2;
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0.33;
         panel.add(showFileNameCheckBox, gbc);
         
         // 分隔线
         JSeparator separator2 = new JSeparator();
         gbc.gridx = 0;
-        gbc.gridy = 10;
-        gbc.gridwidth = 2;
+        gbc.gridy = 5;
+        gbc.gridwidth = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(separator2, gbc);
         
         // 百度翻译配置
         JLabel baiduLabel = new JLabel("百度翻译配置:");
         gbc.gridx = 0;
-        gbc.gridy = 11;
-        gbc.gridwidth = 2;
+        gbc.gridy = 6;
+        gbc.gridwidth = 3;
         gbc.weightx = 0;
         panel.add(baiduLabel, gbc);
         
         JLabel baiduAppIdLabel = new JLabel("App ID:");
         gbc.gridx = 0;
-        gbc.gridy = 12;
+        gbc.gridy = 7;
         gbc.weightx = 0;
         panel.add(baiduAppIdLabel, gbc);
         
@@ -538,12 +479,13 @@ public class PluginConfigurable implements Configurable {
             }
         });
         gbc.gridx = 1;
+        gbc.gridwidth = 2;
         gbc.weightx = 1;
         panel.add(baiduAppIdField, gbc);
         
         JLabel baiduKeyLabel = new JLabel("密钥:");
         gbc.gridx = 0;
-        gbc.gridy = 13;
+        gbc.gridy = 8;
         gbc.weightx = 0;
         panel.add(baiduKeyLabel, gbc);
         
@@ -555,20 +497,21 @@ public class PluginConfigurable implements Configurable {
             }
         });
         gbc.gridx = 1;
+        gbc.gridwidth = 2;
         gbc.weightx = 1;
         panel.add(baiduKeyField, gbc);
         
         // 有道翻译配置
         JLabel youdaoLabel = new JLabel("有道翻译配置:");
         gbc.gridx = 0;
-        gbc.gridy = 14;
-        gbc.gridwidth = 2;
+        gbc.gridy = 9;
+        gbc.gridwidth = 3;
         gbc.weightx = 0;
         panel.add(youdaoLabel, gbc);
         
         JLabel youdaoAppKeyLabel = new JLabel("App Key:");
         gbc.gridx = 0;
-        gbc.gridy = 15;
+        gbc.gridy = 10;
         gbc.weightx = 0;
         panel.add(youdaoAppKeyLabel, gbc);
         
@@ -580,12 +523,13 @@ public class PluginConfigurable implements Configurable {
             }
         });
         gbc.gridx = 1;
+        gbc.gridwidth = 2;
         gbc.weightx = 1;
         panel.add(youdaoAppKeyField, gbc);
         
         JLabel youdaoAppSecretLabel = new JLabel("App Secret:");
         gbc.gridx = 0;
-        gbc.gridy = 16;
+        gbc.gridy = 11;
         gbc.weightx = 0;
         panel.add(youdaoAppSecretLabel, gbc);
         
@@ -597,6 +541,7 @@ public class PluginConfigurable implements Configurable {
             }
         });
         gbc.gridx = 1;
+        gbc.gridwidth = 2;
         gbc.weightx = 1;
         panel.add(youdaoAppSecretField, gbc);
         
@@ -604,8 +549,8 @@ public class PluginConfigurable implements Configurable {
         JButton testTranslationButton = new JButton("测试翻译");
         testTranslationButton.addActionListener(e -> testTranslation());
         gbc.gridx = 0;
-        gbc.gridy = 17;
-        gbc.gridwidth = 2;
+        gbc.gridy = 12;
+        gbc.gridwidth = 3;
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(testTranslationButton, gbc);
         
@@ -652,24 +597,26 @@ public class PluginConfigurable implements Configurable {
                     testTranslationButton.setEnabled(true);
                     testTranslationButton.setText("测试翻译");
                     
-                    JOptionPane.showMessageDialog(mainPanel, 
-                        "翻译测试成功！\n\n" +
-                        "测试文本: 测试\n" +
-                        "翻译结果: " + result.getEnglishText() + "\n\n" +
-                        "变量名: " + result.toVariableName() + "\n" +
-                        "驼峰命名: " + result.toCamelCase(), 
-                        "测试结果", 
-                        JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                            mainPanel,
+                            "翻译测试成功！\n\n" +
+                            "测试文本: 测试\n" +
+                            "翻译结果: " + result.getEnglishText() + "\n\n" +
+                            "变量名: " + result.toVariableName() + "\n" +
+                            "驼峰命名: " + result.toCamelCase(), 
+                            "测试结果", 
+                            JOptionPane.INFORMATION_MESSAGE);
                 });
             } catch (Exception e) {
                 // 在EDT线程中显示错误
                 javax.swing.SwingUtilities.invokeLater(() -> {
                     testTranslationButton.setEnabled(true);
                     testTranslationButton.setText("测试翻译");
-                    JOptionPane.showMessageDialog(mainPanel, 
-                        "翻译测试失败：" + e.getMessage(), 
-                        "测试结果", 
-                        JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(
+                            mainPanel,
+                            "翻译测试失败：" + e.getMessage(), 
+                            "测试结果", 
+                            JOptionPane.ERROR_MESSAGE);
                 });
             }
         }).start();
@@ -778,7 +725,6 @@ public class PluginConfigurable implements Configurable {
         // 加载翻译配置
         PluginGlobalConfig.TranslationConfig translationConfig = config.getTranslationConfig();
         translationProviderComboBox.setSelectedItem(translationConfig.getProvider());
-        hotkeyField.setText(translationConfig.getHotkey());
         showVariableNameCheckBox.setSelected(translationConfig.isShowVariableName());
         showConstantNameCheckBox.setSelected(translationConfig.isShowConstantName());
         showCamelCaseCheckBox.setSelected(translationConfig.isShowCamelCase());
@@ -827,7 +773,6 @@ public class PluginConfigurable implements Configurable {
         // 保存翻译配置
         PluginGlobalConfig.TranslationConfig translationConfig = config.getTranslationConfig();
         translationConfig.setProvider((String) translationProviderComboBox.getSelectedItem());
-        translationConfig.setHotkey(hotkeyField.getText());
         translationConfig.setShowVariableName(showVariableNameCheckBox.isSelected());
         translationConfig.setShowConstantName(showConstantNameCheckBox.isSelected());
         translationConfig.setShowCamelCase(showCamelCaseCheckBox.isSelected());

@@ -18,8 +18,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TranslationDialog extends DialogWrapper {
     
@@ -34,7 +34,7 @@ public class TranslationDialog extends DialogWrapper {
         PluginGlobalConfig globalConfig = PluginConfigComponent.getInstance();
         this.config = globalConfig.getTranslationConfig();
         setTitle("中文转编程命名");
-        setSize(600, 500);
+        setSize(800, 400);
         init();
     }
     
@@ -45,19 +45,20 @@ public class TranslationDialog extends DialogWrapper {
         
         JLabel inputLabel = new JLabel("输入中文（按回车翻译）:");
         inputField = new JBTextField();
-        inputField.setPreferredSize(new Dimension(0, 30));
+        inputField.setPreferredSize(new Dimension(0, 35));
+        inputField.setFont(inputField.getFont().deriveFont(Font.PLAIN, 14f));
         inputField.addActionListener(this::onTranslate);
         
-        JPanel inputPanel = new JPanel(new BorderLayout());
+        JPanel inputPanel = new JPanel(new BorderLayout(5, 5));
         inputPanel.add(inputLabel, BorderLayout.NORTH);
         inputPanel.add(inputField, BorderLayout.CENTER);
         
-        resultPanel = new JPanel();
-        resultPanel.setLayout(new BoxLayout(resultPanel, BoxLayout.Y_AXIS));
-        resultPanel.setBorder(BorderFactory.createTitledBorder("翻译结果（点击复制）"));
+        resultPanel = new JPanel(new GridLayout(0, 3, 10, 10));
+        resultPanel.setBorder(BorderFactory.createTitledBorder("翻译结果（点击复制并关闭）"));
         
         JScrollPane scrollPane = new JScrollPane(resultPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
         panel.add(inputPanel, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -85,28 +86,34 @@ public class TranslationDialog extends DialogWrapper {
             TranslationService service = new TranslationService(PluginConfigComponent.getInstance());
             TranslationResult result = service.translate(chineseText);
             
+            List<ResultItem> items = new ArrayList<>();
+            
             if (config.isShowVariableName()) {
-                addResultItem("变量名 (snake_case)", result.toVariableName());
+                items.add(new ResultItem("变量名", "snake_case", result.toVariableName()));
             }
             
             if (config.isShowConstantName()) {
-                addResultItem("常量名 (UPPER_SNAKE_CASE)", result.toConstantName());
+                items.add(new ResultItem("常量名", "UPPER_SNAKE_CASE", result.toConstantName()));
             }
             
             if (config.isShowCamelCase()) {
-                addResultItem("驼峰命名 (camelCase)", result.toCamelCase());
+                items.add(new ResultItem("驼峰命名", "camelCase", result.toCamelCase()));
             }
             
             if (config.isShowMethodName()) {
-                addResultItem("方法名 (methodName)", result.toMethodName());
+                items.add(new ResultItem("方法名", "methodName", result.toMethodName()));
             }
             
             if (config.isShowClassName()) {
-                addResultItem("类名 (ClassName)", result.toClassName());
+                items.add(new ResultItem("类名", "ClassName", result.toClassName()));
             }
             
             if (config.isShowFileName()) {
-                addResultItem("文件名 (file_name)", result.toFileName());
+                items.add(new ResultItem("文件名", "file_name", result.toFileName()));
+            }
+            
+            for (ResultItem item : items) {
+                addResultItem(item);
             }
             
             resultPanel.revalidate();
@@ -123,32 +130,51 @@ public class TranslationDialog extends DialogWrapper {
         }
     }
     
-    private void addResultItem(String label, String value) {
+    private void addResultItem(ResultItem item) {
         JPanel itemPanel = new JPanel(new BorderLayout(5, 5));
-        itemPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        itemPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        itemPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200)),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
+        itemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        itemPanel.setBackground(Color.WHITE);
         
-        JLabel typeLabel = new JLabel(label);
-        typeLabel.setFont(typeLabel.getFont().deriveFont(Font.BOLD));
+        JLabel titleLabel = new JLabel(item.typeName);
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD, 12f));
+        titleLabel.setForeground(new Color(100, 100, 100));
         
-        JTextField valueField = new JTextField(value);
-        valueField.setEditable(false);
-        valueField.addMouseListener(new MouseAdapter() {
+        JLabel formatLabel = new JLabel(item.format);
+        formatLabel.setFont(formatLabel.getFont().deriveFont(Font.PLAIN, 10f));
+        formatLabel.setForeground(new Color(150, 150, 150));
+        
+        JLabel valueLabel = new JLabel(item.value);
+        valueLabel.setFont(valueLabel.getFont().deriveFont(Font.PLAIN, 14f));
+        valueLabel.setForeground(new Color(50, 50, 50));
+        
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(titleLabel, BorderLayout.NORTH);
+        topPanel.add(formatLabel, BorderLayout.SOUTH);
+        
+        itemPanel.add(topPanel, BorderLayout.NORTH);
+        itemPanel.add(valueLabel, BorderLayout.CENTER);
+        
+        itemPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                copyToClipboard(value);
-                valueField.setBackground(new Color(200, 255, 200));
-                Timer timer = new Timer(200, ev -> {
-                    valueField.setBackground(Color.WHITE);
-                    ((Timer) ev.getSource()).stop();
-                });
-                timer.setRepeats(false);
-                timer.start();
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                copyToClipboard(item.value);
+                close(OK_EXIT_CODE);
+            }
+            
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                itemPanel.setBackground(new Color(240, 248, 255));
+            }
+            
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                itemPanel.setBackground(Color.WHITE);
             }
         });
-        
-        itemPanel.add(typeLabel, BorderLayout.NORTH);
-        itemPanel.add(valueField, BorderLayout.CENTER);
         
         resultPanel.add(itemPanel);
     }
@@ -162,5 +188,17 @@ public class TranslationDialog extends DialogWrapper {
     @Override
     public @Nullable JComponent getPreferredFocusedComponent() {
         return inputField;
+    }
+    
+    private static class ResultItem {
+        String typeName;
+        String format;
+        String value;
+        
+        ResultItem(String typeName, String format, String value) {
+            this.typeName = typeName;
+            this.format = format;
+            this.value = value;
+        }
     }
 }
